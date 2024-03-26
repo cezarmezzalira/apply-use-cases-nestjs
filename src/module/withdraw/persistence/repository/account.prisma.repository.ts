@@ -2,17 +2,16 @@ import { PrismaService } from 'src/shared/module/persistence/prisma/prisma.servi
 import Account from '../../core/entity/account.entity';
 import Customer from '../../core/entity/customer.entity';
 import { Injectable, Logger } from '@nestjs/common';
-import { BaseRepository } from '../../../../shared/module/persistence/repository/base.repository';
+import AccountBaseRepository from './base/account.base.repository';
 
 
 @Injectable()
-export default class AccountPrismaRepository extends BaseRepository<Account> {
+export default class AccountPrismaRepository implements AccountBaseRepository {
   protected accountModel: PrismaService['account'];
   protected customerModel: PrismaService['customer'];
   private logger = new Logger(PrismaService.name);
 
   constructor(prismaService: PrismaService) {
-    super();
     this.accountModel = prismaService.account;
     this.customerModel = prismaService.customer;
   }
