@@ -1,13 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Account } from '@prisma/client';
-import { BaseRepository } from 'src/shared/module/persistence/repository/base.repository';
+import { Injectable } from '@nestjs/common';
 import AccountBaseRepository from '../persistence/repository/base/account.base.repository';
+import AtmBaseRepository from '../persistence/repository/base/atm.base.repository';
 
 @Injectable()
 export default class WithdrawMoneyUseCase {
   constructor(
-    private readonly accountRepository: AccountBaseRepository
-    // private readonly atmRepository: AtmRepository,
+    private readonly accountRepository: AccountBaseRepository,
+    private readonly atmRepository: AtmBaseRepository,
     // private readonly transactionRepository: TransactionRepository,
   ) { }
 
@@ -17,11 +16,18 @@ export default class WithdrawMoneyUseCase {
     withdrawValue: number,
     atmId: string,
   ): Promise<void> {
+    // Get account by accountId
     const account = await this.accountRepository.findById(accountId);
 
-    console.log(account);
-    // Get account by accountId
+    if (!account) {
+      throw new Error('Account not found');
+    }
     // Get ATM by atmId
+    const atm = await this.atmRepository.findById(atmId);
+
+    if (!atm) {
+      throw new Error('ATM not found');
+    }
     // Check if ATM has enough balance
     // Check if accountPassword is correct
     // Check if account has enough balance

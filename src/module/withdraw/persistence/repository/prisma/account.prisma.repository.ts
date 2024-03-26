@@ -1,14 +1,13 @@
 import { PrismaService } from 'src/shared/module/persistence/prisma/prisma.service';
-import Account from '../../core/entity/account.entity';
-import Customer from '../../core/entity/customer.entity';
 import { Injectable, Logger } from '@nestjs/common';
-import AccountBaseRepository from './base/account.base.repository';
-
+import AccountBaseRepository from '../base/account.base.repository';
+import Account from 'src/module/withdraw/core/entity/account.entity';
+import Customer from 'src/module/withdraw/core/entity/customer.entity';
 
 @Injectable()
 export default class AccountPrismaRepository implements AccountBaseRepository {
-  protected accountModel: PrismaService['account'];
-  protected customerModel: PrismaService['customer'];
+  private readonly accountModel: PrismaService['account'];
+  private readonly customerModel: PrismaService['customer'];
   private logger = new Logger(PrismaService.name);
 
   constructor(prismaService: PrismaService) {
@@ -37,7 +36,7 @@ export default class AccountPrismaRepository implements AccountBaseRepository {
       return new Account(
         account.id,
         new Customer(customer.id, customer.name, customer.email),
-        account.balance
+        account.balance,
       );
     } catch (error) {
       this.logger.error(error);
